@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Exam Timetable Generator</title>
+  
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="stylespr.css" />
+
+  <!-- jsPDF (for generating PDF) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+</head>
+<body>
+  <div class="container">
+    <h1>Practical Exam Timetable Generator</h1>
+    
+    <!-- Form for timetable inputs -->
+    <form id="timetableForm">
+      <label for="startId">Starting Student ID (PRN):</label>
+      <input type="number" id="startId" placeholder="e.g. 20230104001" required />
+      
+      <label for="endId">Ending Student ID (PRN):</label>
+      <input type="number" id="endId" placeholder="e.g. 202301040100" required />
+      
+      <label for="venueCount">Number of Venues:</label>
+      <input type="number" id="venueCount" min="1" placeholder="e.g. 2" required />
+      
+      <!-- Container for venue details (generated dynamically) -->
+      <div id="venueDetails"></div>
+      
+      <label for="timeSlotCount">Number of Time Slots (per day):</label>
+      <input type="number" id="timeSlotCount" min="1" placeholder="e.g. 2" required />
+      
+      <!-- Container for time slot details (generated dynamically) -->
+      <div id="timeSlotDetails"></div>
+      
+      <label for="subject">Subject:</label>
+      <input type="text" id="subject" placeholder="e.g., Mathematics" required />
+      
+      <label for="examDate">Starting Exam Date:</label>
+      <input type="date" id="examDate" required />
+      
+      <button type="submit">Generate Timetable</button>
+    </form>
+    
+    <!-- Timetable display -->
+    <div id="timetable"></div>
+    
+    <!-- Button to download the timetable as PDF (hidden until timetable is generated) -->
+    <button id="downloadPdf" style="display: none;">Download Timetable as PDF</button>
+  </div>
+
+  <!-- Link to external JavaScript -->
+  <script src="scriptspr.js"></script>
+</body>
+</html>

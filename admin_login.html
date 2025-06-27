@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+    .login-container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #5563DE;
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #5563DE;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #3e4acb;
+    }
+    #message {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <form id="loginForm">
+      <label for="username">Username:</label><br>
+      <input type="text" id="username" required><br>
+      <label for="password">Password:</label><br>
+      <input type="password" id="password" required><br>
+      <button type="submit">Login</button>
+    </form>
+    <p id="message" style="color:red;"></p>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      // Hardcoded credentials (for demo)
+      if(username === "admin" && password === "admin123"){
+        sessionStorage.setItem("isLoggedIn", "true");
+        window.location.href = "admin_dashboard.html";
+      } else {
+        document.getElementById("message").innerText = "Invalid credentials!";
+      }
+    });
+
+    const labSessionsAssigned = new Map();
+
+    function addCourse(coursename, slots, venue, color, lectureType, isAuto = false) {
+      // ... existing code ...
+      for (aslot in eslots) {
+        if ($('.slot-'+eslots[aslot]+'.used').length > 0) {
+          if (isAuto) {
+            // Just skip this slot, don't show popup or overwrite
+            continue;
+          }
+          // ... existing popup code ...
+        }
+      }
+      // ... rest of function ...
+    }
+
+    // Define morning slots (example: first two periods of each day)
+    const morningSlots = [
+      "1A", "4B", "7A", "3C", "7B", // 8:30-9:25
+      "2A", "5A", "1B", "4C", "5B"  // 9:25-10:20
+      // Add more if your timetable has more morning slots
+    ];
+
+    // In autoGenerateTimetable, before shuffling slots for a course:
+    let availableSlots = theorySlots; // or labSlotPairs for labs
+    if (course.priority == 1) {
+      availableSlots = availableSlots.filter(slot => morningSlots.includes(slot.slot || slot));
+    }
+    shuffleArray(availableSlots);
+
+    const maxLecturesPerDay = 3;
+
+    // Map slot names to days (adjust as per your timetable)
+    const slotToDay = {
+      '1A': 'Monday', '2A': 'Monday', '3A': 'Monday', '4A': 'Monday', '5A': 'Monday', '6A': 'Monday', '7A': 'Monday',
+      '4B': 'Tuesday', '5A': 'Tuesday', '6A': 'Tuesday', '7A': 'Tuesday', '8A': 'Tuesday', '9A': 'Tuesday', '10A': 'Tuesday', '11A': 'Tuesday',
+      // ... fill out for all slots and days
+    };
+
+    const teacherDayCount = {}; // { teacher: { day: count } }
+
+    // Before assigning a slot:
+    const teacher = course.teacher;
+    const day = slotToDay[slot];
+    if (!teacherDayCount[teacher]) teacherDayCount[teacher] = {};
+    if (!teacherDayCount[teacher][day]) teacherDayCount[teacher][day] = 0;
+
+    if (teacherDayCount[teacher][day] < maxLecturesPerDay) {
+      // Assign the slot
+      teacherDayCount[teacher][day]++;
+      // ... rest of your assignment logic
+    } else {
+      // Skip this slot, try another
+    }
+
+    addCourse(courseName, slotString, venue, color, lectureType, true);
+
+    const timetableForm = document.getElementById('loginForm');
+    timetableForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      // Collect all form data as before
+      const startId = parseInt(document.getElementById('startId').value, 10);
+      const endId = parseInt(document.getElementById('endId').value, 10);
+      const examDateValue = document.getElementById('examDate').value;
+      const subject = document.getElementById('subject').value.trim();
+
+      const venueDivs = venueDetailsContainer.querySelectorAll('.venue-capacity');
+      const venues = [];
+      venueDivs.forEach(div => {
+        const inputs = div.getElementsByTagName('input');
+        const name = inputs[0].value.trim();
+        const capacity = parseInt(inputs[1].value, 10);
+        venues.push({ name, capacity });
+      });
+
+      const timeSlotInputs = timeSlotDetailsContainer.getElementsByTagName('input');
+      const timeSlots = [];
+      for (let i = 0; i < timeSlotInputs.length; i++) {
+        timeSlots.push(timeSlotInputs[i].value.trim());
+      }
+
+      // Validation (same as before)
+      if (startId > endId) {
+        alert('Starting Student ID must be less than or equal to Ending Student ID.');
+        return;
+      }
+      if (venues.length === 0 || timeSlots.length === 0 || subject === '') {
+        alert('Please enter at least one venue, one time slot, and the subject.');
+        return;
+      }
+
+      let formData = {
+        startId,
+        endId,
+        examDateValue,
+        subject,
+        venues,
+        timeSlots
+      };
+
+      // Save to localStorage
+      localStorage.setItem('practicalTimetableForm', JSON.stringify(formData));
+
+      // Redirect to result page
+      window.location.href = 'practical_result.html';
+    });
+
+    window.generateTimetableFromData = function(formData) {
+      // Use formData.startId, formData.endId, etc.
+      // ...existing timetable generation logic...
+      // Render timetable into document.getElementById('timetable')
+    };
+  </script>
+</body>
+</html>

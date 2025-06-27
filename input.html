@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Timetable Input</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .batch-section, .manual-input-section, .fixed-timetable-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+    .fixed-slot {
+      background-color: #e8f4f8;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 4px;
+    }
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .slot-item {
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .slot-item.selected {
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-4">
+  <h2 class="text-center">Auto Timetable Input</h2>
+
+  <!-- Batch Selection Section -->
+  <div class="batch-section">
+    <h3>Step 1: Enter Batch Details</h3>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="input-group">
+          <input type="text" class="form-control" id="newBatchName" placeholder="Enter Batch Name (e.g., A, B, C)">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="hasFixedTimetable">
+          <label class="form-check-label" for="hasFixedTimetable">
+            This batch has fixed/partial timetable
+          </label>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="createNewBatch()">Create Batch</button>
+  </div>
+
+  <!-- Fixed Timetable Section -->
+  <div id="fixedTimetableSection" class="fixed-timetable-section hidden">
+    <h3>Step 2: Add Fixed Slots</h3>
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <input type="text" class="form-control" id="fixedSubject" placeholder="Subject Code">
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" id="fixedTeacher" placeholder="Teacher">
+      </div>
+      <div class="col-md-3">
+        <input type="text" class="form-control" id="fixedVenue" placeholder="Venue">
+      </div>
+      <div class="col-md-3">
+        <select class="form-control" id="fixedSlotType">
+          <option value="theory">Theory</option>
+          <option value="lab">Lab</option>
+        </select>
+      </div>
+    </div>
+    <div class="slot-grid" id="slotGrid">
+      <!-- Slots will be populated by JavaScript -->
+    </div>
+    <button class="btn btn-info" onclick="addFixedSlot()">Add Fixed Slot</button>
+    <div id="fixedSlotsList" class="mt-3">
+      <!-- Fixed slots will be listed here -->
+    </div>
+  </div>
+
+  <!-- Course Input Section -->
+  <div class="course-section">
+    <h3>Step 3: Add Courses</h3>
+  <form id="autoInputForm">
+    <div id="subjectInputs">
+      <div class="row mb-3">
+        <div class="col-md-2">
+          <input type="text" class="form-control" name="subject[]" placeholder="Subject (e.g., ADS)" required>
+        </div>
+        <div class="col-md-2">
+          <input type="text" class="form-control" name="teacher[]" placeholder="Teacher (e.g., RMD)" required>
+        </div>
+        <div class="col-md-2">
+          <input type="text" class="form-control" name="venue[]" placeholder="Venue (e.g., 301)" required>
+        </div>
+        <div class="col-md-2">
+          <input type="number" class="form-control" name="lectures[]" placeholder="Lectures per week" required>
+        </div>
+        <div class="col-md-2">
+          <select class="form-control" name="lectureType[]" required>
+            <option value="theory">Theory</option>
+            <option value="lab">Lab</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <select class="form-control" name="priority[]" required>
+            <option value="1">1 (Morning Priority)</option>
+            <option value="2">2 (Normal)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-info" onclick="addMore()">Add Another Subject</button>
+    <button type="submit" class="btn btn-success">Generate Timetable</button>
+  </form>
+  </div>
+</div>
+
+<script>
+// Store fixed slots and selected slots
+let fixedSlots = [];
+let selectedSlots = new Set();
+
+// Define all available slots
+const allSlots = [
+    "1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A", "10A", "11A",
+    "1B", "2B", "3B", "4B", "5B", "6B", "7B", "8B", "9B", "10B", "11B",
+    "1C", "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "10C", "11C"
+];
+
+// Function to create new batch
+function createNewBatch() {
+    const batchName = document.getElementById('newBatchName').value.trim();
+    if (!batchName) {
+        alert('Please enter a batch name');
+        return;
+    }
+
+    // Save to localStorage
+    const savedBatches = JSON.parse(localStorage.getItem('timetableBatches') || '[]');
+    if (!savedBatches.includes(batchName)) {
+        savedBatches.push(batchName);
+        localStorage.setItem('timetableBatches', JSON.stringify(savedBatches));
+    }
+
+    // Show appropriate sections based on fixed timetable option
+    const hasFixedTimetable = document.getElementById('hasFixedTimetable').checked;
+    document.querySelector('.batch-section').style.display = 'none';
+    
+    if (hasFixedTimetable) {
+        document.getElementById('fixedTimetableSection').classList.remove('hidden');
+        initializeSlotGrid();
+    }
+    
+    document.querySelector('.course-section').style.display = 'block';
+}
+
+// Initialize slot grid
+function initializeSlotGrid() {
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '';
+    
+    allSlots.forEach(slot => {
+        const div = document.createElement('div');
+        div.className = 'slot-item';
+        div.textContent = slot;
+        div.onclick = () => toggleSlotSelection(slot, div);
+        grid.appendChild(div);
+    });
+}
+
+// Toggle slot selection
+function toggleSlotSelection(slot, element) {
+    if (selectedSlots.has(slot)) {
+        selectedSlots.delete(slot);
+        element.classList.remove('selected');
+    } else {
+        selectedSlots.add(slot);
+        element.classList.add('selected');
+    }
+}
+
+// Function to add fixed slot
+function addFixedSlot() {
+    const subject = document.getElementById('fixedSubject').value.trim();
+    const teacher = document.getElementById('fixedTeacher').value.trim();
+    const venue = document.getElementById('fixedVenue').value.trim();
+    const type = document.getElementById('fixedSlotType').value;
+    
+    if (!subject || !teacher || !venue || selectedSlots.size === 0) {
+        alert('Please fill all fields and select at least one slot');
+        return;
+    }
+
+    const fixedSlot = {
+        subject,
+        teacher,
+        venue,
+        type,
+        slots: Array.from(selectedSlots)
+    };
+
+    fixedSlots.push(fixedSlot);
+    updateFixedSlotsList();
+    
+    // Clear inputs and selections
+    document.getElementById('fixedSubject').value = '';
+    document.getElementById('fixedTeacher').value = '';
+    document.getElementById('fixedVenue').value = '';
+    selectedSlots.clear();
+    document.querySelectorAll('.slot-item.selected').forEach(el => el.classList.remove('selected'));
+}
+
+// Function to update fixed slots list
+function updateFixedSlotsList() {
+    const container = document.getElementById('fixedSlotsList');
+    container.innerHTML = '';
+    
+    fixedSlots.forEach((slot, index) => {
+        const div = document.createElement('div');
+        div.className = 'fixed-slot';
+        div.innerHTML = `
+            <strong>${slot.subject}</strong> (${slot.type}) - ${slot.teacher} - ${slot.venue}<br>
+            Slots: ${slot.slots.join(', ')}
+            <button type="button" class="btn btn-sm btn-danger float-end" onclick="removeFixedSlot(${index})">Remove</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Function to remove fixed slot
+function removeFixedSlot(index) {
+    fixedSlots.splice(index, 1);
+    updateFixedSlotsList();
+}
+
+// Add more subject inputs
+function addMore() {
+    const template = document.querySelector('#subjectInputs .row').cloneNode(true);
+    template.querySelectorAll('input, select').forEach(input => input.value = '');
+    document.getElementById('subjectInputs').appendChild(template);
+}
+
+// Handle form submission
+document.getElementById("autoInputForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+    
+    // Get batch name
+    const batchName = document.getElementById('newBatchName').value.trim();
+    if (!batchName) {
+        alert('Please enter a batch name first');
+        return;
+    }
+
+  const formData = new FormData(event.target);
+  const subjects = formData.getAll("subject[]");
+  const teachers = formData.getAll("teacher[]");
+  const venues = formData.getAll("venue[]");
+  const lectures = formData.getAll("lectures[]");
+  const lectureTypes = formData.getAll("lectureType[]");
+  const priorities = formData.getAll("priority[]");
+
+    const inputData = {
+        batch: batchName,
+        hasFixedTimetable: document.getElementById('hasFixedTimetable').checked,
+        fixedSlots: fixedSlots,
+        courses: subjects.map((subject, i) => ({
+    subject,
+    teacher: teachers[i],
+    venue: venues[i],
+    lectures: parseInt(lectures[i]),
+    lectureType: lectureTypes[i],
+    priority: parseInt(priorities[i])
+        }))
+    };
+
+    // Save input data
+  localStorage.setItem("autoInputData", JSON.stringify(inputData));
+
+    // Redirect to main page
+  window.location.href = "index.html";
+});
+
+// Initialize form on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initially hide sections
+    document.querySelector('.manual-input-section').style.display = 'none';
+    document.querySelector('.course-section').style.display = 'none';
+    document.getElementById('fixedTimetableSection').classList.add('hidden');
+});
+</script>
+</body>
+</html>

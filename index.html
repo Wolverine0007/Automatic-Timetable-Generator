@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Timetable generator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-colorpicker.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+ 	<script type="text/javascript" src="js/bootstrap-colorpicker.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+</head>
+
+<body>	
+    <!-- Logout Button at top right -->
+    <div style="position: absolute; top: 20px; right: 20px;">
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
+ 
+
+	<a href="input.html" class="btn btn-primary">Go to Auto Input</a>
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h3 style="padding: 2%;text-align: center; font-weight: bold; font-size: 220%;">
+				Timetable Generator
+			</h3>
+		</div>
+	</div>
+
+	<!-- Add class management section -->
+	<div class="row clearfix mb-4">
+		<div class="col-md-12">
+			<div class="input-group">
+				<select id="classSelector" class="form-control" onchange="handleClassSelection(this.value)">
+					<option value="">Select Class</option>
+				</select>
+				<div class="input-group-append">
+					<button class="btn btn-danger" onclick="deleteSelectedClass()" id="deleteClassBtn" disabled>
+						Delete Class
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Add a button to go to input form -->
+	<div class="row clearfix mb-4">
+		<div class="col-md-12">
+			<a href="input.html" class="btn btn-primary">Generate New Timetable</a>
+		</div>
+	</div>
+
+	<div class="row clearfix">
+		<div class="col-md-10 column">
+		<div class="row clearfix" id="inputrow">
+		<div class="col-md-2 column"><input type="text" class="form-control" id="ccode" placeholder="Course code"/></div>
+		<div class="col-md-2 column">
+            <div class="input-group">
+			    <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" id="helpicon"></i>
+                </span>
+			    <input type="text" class="form-control" id="cslots" placeholder="Slots"/>
+		    </div>
+        </div>
+		<div class="col-md-2 column">
+            <input type="text" class="form-control" id="cvenue" placeholder="Venue"/>
+        </div>
+		<div class="col-md-1 column">
+            <button style="background: green;" class="btn btn-primary" onclick="addCourse($('#ccode').val(),$('#cslots').val(),$('#cvenue').val(), $('#color').val())">Add</button>
+        </div>
+		</div>
+		<div class="row">&nbsp;</div> 
+		<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table table-bordered maintbl">
+				<thead style="background: cyan;">
+					<tr style="font-size: 130%;">
+						<th class="tm2" style="font-size: large;">Time</th>
+						<th>Monday</th>
+						<th>Tuesday</th>
+						<th>Wednesday</th>
+						<th>Thursday</th>
+						<th>Friday</th>
+					</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td class="tm">
+						8:30-<br>9:25
+					</td>
+					<td class="slot-1 slot-1A">
+                        <span class="slot-name">1A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-4 slot-4B">
+                        <span class="slot-name">4B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7A">
+                        <span class="slot-name">7A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-3 slot-3C">
+                        <span class="slot-name">3C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7B">
+                        <span class="slot-name">7B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td class="tm">
+						9:25-<br>10:20
+					</td>
+					<td class="slot-2 slot-2A">
+                        <span class="slot-name">2A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-5 slot-5A">
+                        <span class="slot-name">5A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-1 slot-1B">
+                        <span class="slot-name">1B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-4 slot-4C">
+                        <span class="slot-name">4C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-5 slot-5B">
+                        <span class="slot-name">5B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<!-- Short Break Row -->
+				<tr>
+					<td class="tm">
+						10:20-<br>10:30
+					</td>
+					<td colspan="5" style="text-align: center; background-color: #FFE4B5; font-weight: bold;">
+						Short Break
+					</td>
+				</tr>
+				<tr>
+					<td class="tm">
+						10:30-<br>11:25
+					</td>
+					<td class="slot-3 slot-3A">
+                        <span class="slot-name">3A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-6 slot-6A">
+                        <span class="slot-name">6A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-2 slot-2B">
+                        <span class="slot-name">2B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-5 slot-5C">
+                        <span class="slot-name">5C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-6 slot-6B">
+                        <span class="slot-name">6B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td class="tm">
+						11:25-<br>12:20
+					</td>
+					<td class="slot-4 slot-4A">
+                        <span class="slot-name">4A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7A">
+                        <span class="slot-name">7A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-3 slot-3B">
+                        <span class="slot-name">3B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-6 slot-6C">
+                        <span class="slot-name">6C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7C">
+                        <span class="slot-name">7C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<!-- Lunch Break Row -->
+				<tr>
+					<td class="tm">
+						12:20-<br>1:15
+					</td>
+					<td colspan="5" style="text-align: center; background-color: #FFB6C1; font-weight: bold;">
+						Lunch Break
+					</td>
+				</tr>
+				<tr>
+					<td class="tm">
+						1:15-<br>2:10
+					</td>
+					<td class="slot-5 slot-5A">
+                        <span class="slot-name">5A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-8 slot-8A">
+                        <span class="slot-name">8A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-4 slot-4B">
+                        <span class="slot-name">4B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7C">
+                        <span class="slot-name">7C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-8 slot-8B">
+                        <span class="slot-name">8B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td class="tm">
+						2:10-<br>3:05
+					</td>
+					<td class="slot-6 slot-6A">
+                        <span class="slot-name">6A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-9 slot-9A">
+                        <span class="slot-name">9A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-5 slot-5B">
+                        <span class="slot-name">5B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-8 slot-8C">
+                        <span class="slot-name">8C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-9 slot-9B">
+                        <span class="slot-name">9B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td class="tm">
+						3:05-<br>4:00
+					</td>
+					<td class="slot-7 slot-7A">
+                        <span class="slot-name">7A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-10 slot-10A">
+                        <span class="slot-name">10A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-6 slot-6B">
+                        <span class="slot-name">6B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-9 slot-9C">
+                        <span class="slot-name">9C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-10 slot-10B">
+                        <span class="slot-name">10B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				<tr>
+					<td class="tm">
+						4:00-<br>4:50
+					</td>
+					<td class="slot-8 slot-8A">
+                        <span class="slot-name">8A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-11 slot-11A">
+                        <span class="slot-name">11A</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-7 slot-7B">
+                        <span class="slot-name">7B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-10 slot-10C">
+                        <span class="slot-name">10C</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+					<td class="slot-11 slot-11B">
+                        <span class="slot-name">11B</span>
+                        <div class="slot-deets">
+                          <span class="course-name"></span>
+                          <div class="course-venue"></div>
+                          <div class="course-teacher"></div>
+                        </div>
+                    </td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		</div>
+		</div>
+		<div class="col-md-2 column">
+            <br><br>
+            </br></br>
+			<table class="table table-striped table-hover" style="background: cyan;">
+				<thead>
+					<tr>
+						<th colspan="2">Course list</th>
+					</tr>
+				</thead>
+				<tbody id="listb"></tbody>
+			</table>
+		</div>
+		
+	</div>
+	<div class="row"></div>
+</div>
+<footer class="container">
+  <div class="row">
+    <p class="col-sm-4">
+         <i class="fa fa-heart" style="font-size:14px;color:red;"></i>
+    </p>
+    <ul class="col-sm-8">
+      <!-- Add this just before the closing </div> of the container -->
+      <div class="mb-3">
+          <button class="btn btn-warning" onclick="autoGenerateTimetable()">Auto Generate Timetable</button>
+      </div>
+    </ul>
+  </div>
+</footer>
+
+<!-- Logout Function -->
+<script>
+  function logout() {
+      // Clear any login/session info if needed (example using sessionStorage)
+      sessionStorage.removeItem('isLoggedIn');
+      window.location.href = "admin_login.html";
+  }
+</script>
+
+<!-- Updated autoGenerateTimetable function with addCourse integration -->
+<script>
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function autoGenerateTimetable() {
+    // First check for new input data
+    const inputData = JSON.parse(localStorage.getItem("autoInputData"));
+    if (inputData) {
+        // This is a new batch generation
+        generateNewBatchTimetable(inputData);
+        return;
+    }
+
+    // If no input data, proceed with regenerating existing timetable
+    const currentClass = document.getElementById('classSelector').value;
+    if (!currentClass) {
+        alert("Please select a class first");
+        return;
+    }
+
+    // Get existing timetable data
+    const existingTimetable = JSON.parse(localStorage.getItem(`timetable_${currentClass}`) || '{}');
+    if (Object.keys(existingTimetable).length === 0) {
+        alert("No timetable data found for this class. Please generate a timetable first.");
+        return;
+    }
+
+    // Extract fixed slots and courses from existing timetable
+    const fixedSlots = new Map();
+    const courses = new Map();
+    Object.entries(existingTimetable).forEach(([slot, data]) => {
+        if (data.isFixed) {
+            fixedSlots.set(slot, data);
+        }
+        if (!courses.has(data.subject)) {
+            courses.set(data.subject, {
+                subject: data.subject,
+                teacher: data.teacher,
+                venue: data.venue,
+                type: data.type,
+                lectures: 0,
+                priority: data.priority || 2
+            });
+        }
+        courses.get(data.subject).lectures++;
+    });
+
+    // Try multiple arrangements
+    const maxAttempts = 5;
+    let bestTimetable = null;
+    let bestScore = -1;
+    let bestWarnings = [];
+
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        // Clear previously auto-filled slots (but preserve fixed slots)
+        const allCells = document.querySelectorAll(".maintbl td.used");
+        allCells.forEach(cell => {
+            const slotName = cell.querySelector('.slot-name')?.innerText;
+            if (!fixedSlots.has(slotName)) {
+                cell.querySelector(".course-name").innerText = "";
+                cell.querySelector(".course-venue").innerText = "";
+                cell.querySelector(".course-teacher").innerText = "";
+                cell.classList.remove("used");
+                cell.style.backgroundColor = "white";
+                cell.style.display = "";
+                cell.style.height = "";
+                cell.rowSpan = "1";
+            }
+        });
+
+        // Create a map to store the generated timetable
+        const generatedTimetable = {};
+        const usedSlots = new Map();
+        const courseSlotsAssigned = new Map();
+        const labSessionsAssigned = new Map();
+        let currentScore = 0;
+        let currentWarnings = [];
+
+        // Apply fixed slots first
+        fixedSlots.forEach((data, slot) => {
+            const cell = document.querySelector(`.slot-${slot}`);
+            if (cell) {
+                usedSlots.set(slot, data);
+                cell.querySelector(".course-name").innerText = data.subject;
+                cell.querySelector(".course-venue").innerText = data.venue;
+                cell.querySelector(".course-teacher").innerText = data.teacher;
+                cell.classList.add("used");
+                cell.style.backgroundColor = data.type === 'lab' ? 
+                    "rgba(255, 182, 193, 0.5)" : "rgba(173, 216, 230, 0.5)";
+
+                if (data.type === 'lab') {
+                    cell.rowSpan = "2";
+                    cell.style.height = "100px";
+                    const nextCell = cell.parentElement.nextElementSibling?.cells[Array.from(cell.parentElement.cells).indexOf(cell)];
+                    if (nextCell) {
+                        nextCell.style.display = "none";
+                    }
+                }
+
+                generatedTimetable[slot] = data;
+                currentScore += 10; // Bonus points for fixed slots
+            }
+        });
+
+        // Convert courses Map to Array for processing
+        const coursesArray = Array.from(courses.values());
+        
+        // Shuffle courses array for different arrangements
+        shuffleArray(coursesArray);
+
+        // Handle lab lectures
+        coursesArray.forEach(course => {
+            if (course.type === "lab") {
+                labSessionsAssigned.set(course.subject, 0);
+                const requiredLabSessions = course.lectures;
+
+                // Build a list of all possible (period, slot) pairs for labs
+                let labSlotPairs = [];
+                timePeriods.forEach(period => {
+                    period.slots.forEach(slot => {
+                        const conflictCheck = checkConflicts(slot, course.subject, course.teacher, course.venue);
+                        if (!conflictCheck.hasConflict) {
+                            labSlotPairs.push({ period, slot });
+                        }
+                    });
+                });
+
+                // Filter for priority 1: only use morning slots
+                if (course.priority === 1) {
+                    labSlotPairs = labSlotPairs.filter(pair => morningSlots.includes(pair.slot));
+                }
+
+                shuffleArray(labSlotPairs);
+
+                // Try to find adjacent slots for each lab session
+                for (let pair of labSlotPairs) {
+                    if (labSessionsAssigned.get(course.subject) >= requiredLabSessions) break;
+                    const { period, slot } = pair;
+                    const cells = document.getElementsByClassName(`slot-${slot}`);
+                    
+                    for (let cell of cells) {
+                        if (cell.style.display === "none" || cell.classList.contains("used")) continue;
+                        
+                        const row = cell.parentElement;
+                        const nextRow = row.nextElementSibling;
+                        
+                        if (nextRow && !nextRow.classList.contains("break-row")) {
+                            const nextCell = nextRow.cells[Array.from(row.cells).indexOf(cell)];
+                            const nextSlotName = nextCell.querySelector('.slot-name')?.innerText;
+                            
+                            if (course.priority === 1 && !morningSlots.includes(nextSlotName)) continue;
+                            
+                            const nextConflictCheck = checkConflicts(nextSlotName, course.subject, course.teacher, course.venue);
+                            if (nextCell && !nextCell.classList.contains("used") && 
+                                nextCell.style.display !== "none" &&
+                                !nextConflictCheck.hasConflict) {
+                                
+                                // Mark slots as used
+                                usedSlots.set(slot, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'lab' });
+                                usedSlots.set(nextSlotName, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'lab' });
+                                
+                                // Update cell display
+                                cell.rowSpan = "2";
+                                cell.style.height = "100px";
+                                cell.querySelector(".course-name").innerText = course.subject + " (Lab)";
+                                cell.querySelector(".course-venue").innerText = course.venue;
+                                cell.querySelector(".course-teacher").innerText = course.teacher;
+                                cell.classList.add("used");
+                                cell.style.backgroundColor = "rgba(255, 182, 193, 0.5)";
+                                
+                                nextCell.style.display = "none";
+                                nextCell.classList.add("used");
+                                
+                                // Update assignments
+                                const currentLabSessions = labSessionsAssigned.get(course.subject) + 1;
+                                labSessionsAssigned.set(course.subject, currentLabSessions);
+                                courseSlotsAssigned.set(course.subject, currentLabSessions);
+                                
+                                // Add to generated timetable
+                                generatedTimetable[slot] = {
+                                    subject: course.subject,
+                                    teacher: course.teacher,
+                                    venue: course.venue,
+                                    type: 'lab'
+                                };
+                                
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Update currentScore based on lab assignments
+                if (labSessionsAssigned.get(course.subject) === course.lectures) {
+                    currentScore += 5;
+                }
+            }
+        });
+
+        // Handle theory lectures
+        coursesArray.forEach(course => {
+            if (course.type === "theory") {
+                let lecturesNeeded = course.lectures;
+                courseSlotsAssigned.set(course.subject, 0);
+                
+                // Build a list of all possible slots for theory
+                let theorySlots = [];
+                timePeriods.forEach(period => {
+                    period.slots.forEach(slot => {
+                        const conflictCheck = checkConflicts(slot, course.subject, course.teacher, course.venue);
+                        if (!conflictCheck.hasConflict) {
+                            theorySlots.push(slot);
+                        }
+                    });
+                });
+                
+                // Filter for priority 1: only use morning slots
+                if (course.priority === 1) {
+                    theorySlots = theorySlots.filter(slot => morningSlots.includes(slot));
+                }
+                
+                shuffleArray(theorySlots);
+                
+                for (let slot of theorySlots) {
+                    if (lecturesNeeded === 0) break;
+                    
+                    const cells = document.getElementsByClassName(`slot-${slot}`);
+                    for (let cell of cells) {
+                        if (cell.style.display === "none") continue;
+                        if (cell.querySelector(".course-name").innerText === "") {
+                            // Fill the slot visually
+                            cell.querySelector(".course-name").innerText = course.subject;
+                            cell.querySelector(".course-venue").innerText = course.venue;
+                            cell.querySelector(".course-teacher").innerText = course.teacher;
+                            cell.classList.add("used");
+                            cell.style.backgroundColor = "rgba(173, 216, 230, 0.5)";
+                            
+                            // Mark slot as used
+                            usedSlots.set(slot, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'theory' });
+                            
+                            // Update assignments
+                            courseSlotsAssigned.set(course.subject, courseSlotsAssigned.get(course.subject) + 1);
+                            lecturesNeeded--;
+                            
+                            // Add to generated timetable
+                            generatedTimetable[slot] = {
+                                subject: course.subject,
+                                teacher: course.teacher,
+                                venue: course.venue,
+                                type: 'theory'
+                            };
+                            
+                            break;
+                        }
+                    }
+                }
+
+                // Update currentScore based on theory assignments
+                if (courseSlotsAssigned.get(course.subject) === course.lectures) {
+                    currentScore += 5;
+                }
+            }
+        });
+
+        // Calculate score and collect warnings
+        coursesArray.forEach(course => {
+            const slotsAssigned = courseSlotsAssigned.get(course.subject) || 0;
+            if (slotsAssigned !== course.lectures) {
+                currentWarnings.push(`Course ${course.subject} has ${slotsAssigned} slots assigned but needs ${course.lectures}`);
+            } else {
+                currentScore += 10; // Bonus for complete assignment
+            }
+        });
+
+        // Update best timetable if this attempt is better
+        if (currentScore > bestScore) {
+            bestScore = currentScore;
+            bestTimetable = { ...generatedTimetable };
+            bestWarnings = [...currentWarnings];
+        }
+    }
+
+    // Apply the best timetable found
+    if (bestTimetable) {
+        // Clear the display
+        const allCells = document.querySelectorAll(".maintbl td");
+        allCells.forEach(cell => {
+            const slotName = cell.querySelector('.slot-name')?.innerText;
+            if (!fixedSlots.has(slotName)) {
+                cell.querySelector(".course-name").innerText = "";
+                cell.querySelector(".course-venue").innerText = "";
+                cell.querySelector(".course-teacher").innerText = "";
+                cell.classList.remove("used");
+                cell.style.backgroundColor = "white";
+                cell.style.display = "";
+                cell.style.height = "";
+                cell.rowSpan = "1";
+            }
+        });
+
+        // Apply the best timetable
+        Object.entries(bestTimetable).forEach(([slot, data]) => {
+            const cell = document.querySelector(`.slot-${slot}`);
+            if (cell) {
+                cell.querySelector(".course-name").innerText = data.subject;
+                cell.querySelector(".course-venue").innerText = data.venue;
+                cell.querySelector(".course-teacher").innerText = data.teacher;
+                cell.classList.add("used");
+                cell.style.backgroundColor = data.type === 'lab' ? 
+                    "rgba(255, 182, 193, 0.5)" : "rgba(173, 216, 230, 0.5)";
+
+                if (data.type === 'lab') {
+                    cell.rowSpan = "2";
+                    cell.style.height = "100px";
+                    const nextCell = cell.parentElement.nextElementSibling?.cells[Array.from(cell.parentElement.cells).indexOf(cell)];
+                    if (nextCell) {
+                        nextCell.style.display = "none";
+                    }
+                }
+            }
+        });
+
+        // Save the best timetable
+        localStorage.setItem(`timetable_${currentClass}`, JSON.stringify(bestTimetable));
+
+        // Show appropriate message
+        if (bestWarnings.length > 0) {
+            const message = "Generated timetable with the following considerations:\n\n" +
+                bestWarnings.join("\n") + "\n\n" +
+                "This is the best arrangement found after trying " + maxAttempts + " different combinations.\n" +
+                "You can click 'Auto Generate' again to try a different arrangement.";
+            alert(message);
+        } else {
+            alert("Generated an optimal timetable that satisfies all constraints!");
+        }
+    }
+}
+
+function generateNewBatchTimetable(inputData) {
+    if (!inputData || !inputData.batch) {
+        alert("Invalid input data. Please fill out the form again.");
+        return;
+    }
+
+    // Clear previously auto-filled slots
+    const allCells = document.querySelectorAll(".maintbl td.used");
+    allCells.forEach(cell => {
+        cell.querySelector(".course-name").innerText = "";
+        cell.querySelector(".course-venue").innerText = "";
+        cell.querySelector(".course-teacher").innerText = "";
+        cell.classList.remove("used");
+        cell.style.backgroundColor = "white";
+        cell.style.display = "";
+        cell.style.height = "";
+        cell.rowSpan = "1";
+    });
+
+    // Define time periods with their corresponding slots
+    const timePeriods = [
+        {
+            start: "8:30-9:25",
+            end: "9:25-10:20",
+            slots: ["1A", "4B", "7A", "3C", "7B"]
+        },
+        {
+            start: "10:30-11:25",
+            end: "11:25-12:20",
+            slots: ["3A", "6A", "2B", "5C", "6B"]
+        },
+        {
+            start: "1:15-2:10",
+            end: "2:10-3:05",
+            slots: ["5A", "8A", "4B", "7C", "8B"]
+        },
+        {
+            start: "3:05-4:00",
+            end: "4:00-4:50",
+            slots: ["7A", "10A", "6B", "9C", "10B"]
+        }
+    ];
+
+    // Define morning slots
+    const morningSlots = [
+        "1A", "4B", "7A", "3C", "7B",
+        "2A", "5A", "1B", "4C", "5B",
+        "3A", "6A", "2B", "5C", "6B",
+        "4A", "7A", "3B", "6C", "7C"
+    ];
+
+    // Create a map to store the generated timetable
+    const generatedTimetable = {};
+    const usedSlots = new Map();
+    const courseSlotsAssigned = new Map();
+    const labSessionsAssigned = new Map();
+
+    // First, apply fixed slots if any
+    if (inputData.hasFixedTimetable && inputData.fixedSlots) {
+        inputData.fixedSlots.forEach(fixedSlot => {
+            fixedSlot.slots.forEach(slot => {
+                const cell = document.querySelector(`.slot-${slot}`);
+                if (cell) {
+                    // Mark slot as used
+                    usedSlots.set(slot, {
+                        course: fixedSlot.subject,
+                        teacher: fixedSlot.teacher,
+                        venue: fixedSlot.venue,
+                        type: fixedSlot.type,
+                        isFixed: true
+                    });
+
+                    // Update cell display
+                    cell.querySelector(".course-name").innerText = fixedSlot.subject;
+                    cell.querySelector(".course-venue").innerText = fixedSlot.venue;
+                    cell.querySelector(".course-teacher").innerText = fixedSlot.teacher;
+                    cell.classList.add("used");
+                    cell.style.backgroundColor = fixedSlot.type === 'lab' ? 
+                        "rgba(255, 182, 193, 0.5)" : "rgba(173, 216, 230, 0.5)";
+
+                    if (fixedSlot.type === 'lab') {
+                        cell.rowSpan = "2";
+                        cell.style.height = "100px";
+                        const nextCell = cell.parentElement.nextElementSibling?.cells[Array.from(cell.parentElement.cells).indexOf(cell)];
+                        if (nextCell) {
+                            nextCell.style.display = "none";
+                        }
+                    }
+
+                    // Add to generated timetable
+                    generatedTimetable[slot] = {
+                        subject: fixedSlot.subject,
+                        teacher: fixedSlot.teacher,
+                        venue: fixedSlot.venue,
+                        type: fixedSlot.type,
+                        isFixed: true
+                    };
+                }
+            });
+        });
+    }
+
+    // Load all existing timetables for conflict checking
+    const allTimetables = {};
+    const existingBatches = JSON.parse(localStorage.getItem('timetableBatches') || '[]');
+    existingBatches.forEach(batch => {
+        if (batch !== inputData.batch) { // Exclude current batch
+            const timetable = JSON.parse(localStorage.getItem(`timetable_${batch}`) || '{}');
+            allTimetables[batch] = timetable;
+        }
+    });
+
+    // Function to check for conflicts
+    function checkConflicts(slot, course, teacher, venue) {
+        // Check if slot is already used
+        if (usedSlots.has(slot)) return true;
+
+        // Check teacher conflicts across all timetables
+        for (const [batch, timetable] of Object.entries(allTimetables)) {
+            if (timetable[slot] && timetable[slot].teacher === teacher) return true;
+        }
+
+        // Check venue conflicts across all timetables
+        for (const [batch, timetable] of Object.entries(allTimetables)) {
+            if (timetable[slot] && timetable[slot].venue === venue) return true;
+        }
+
+        return false;
+    }
+
+    // Handle lab lectures
+    inputData.courses.forEach(course => {
+        if (course.lectureType === "lab") {
+            labSessionsAssigned.set(course.subject, 0);
+            const requiredLabSessions = course.lectures;
+
+            // Build a list of all possible (period, slot) pairs for labs
+            let labSlotPairs = [];
+            timePeriods.forEach(period => {
+                period.slots.forEach(slot => {
+                    if (!checkConflicts(slot, course.subject, course.teacher, course.venue)) {
+                    labSlotPairs.push({ period, slot });
+                    }
+                });
+            });
+
+            // Filter for priority 1: only use morning slots
+            if (course.priority === 1) {
+                labSlotPairs = labSlotPairs.filter(pair => morningSlots.includes(pair.slot));
+            }
+
+            shuffleArray(labSlotPairs);
+
+            // Try to find adjacent slots for each lab session
+            for (let pair of labSlotPairs) {
+                if (labSessionsAssigned.get(course.subject) >= requiredLabSessions) break;
+                const { period, slot } = pair;
+                const cells = document.getElementsByClassName(`slot-${slot}`);
+                
+                for (let cell of cells) {
+                    if (cell.style.display === "none" || cell.classList.contains("used")) continue;
+                    
+                    const row = cell.parentElement;
+                    const nextRow = row.nextElementSibling;
+                    
+                    if (nextRow && !nextRow.classList.contains("break-row")) {
+                        const nextCell = nextRow.cells[Array.from(row.cells).indexOf(cell)];
+                            const nextSlotName = nextCell.querySelector('.slot-name')?.innerText;
+                        
+                        if (course.priority === 1 && !morningSlots.includes(nextSlotName)) continue;
+                        
+                        if (nextCell && !nextCell.classList.contains("used") && 
+                            nextCell.style.display !== "none" &&
+                            !checkConflicts(nextSlotName, course.subject, course.teacher, course.venue)) {
+                            
+                            // Mark slots as used
+                            usedSlots.set(slot, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'lab' });
+                            usedSlots.set(nextSlotName, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'lab' });
+                            
+                            // Update cell display
+                            cell.rowSpan = "2";
+                            cell.style.height = "100px";
+                            cell.querySelector(".course-name").innerText = course.subject + " (Lab)";
+                            cell.querySelector(".course-venue").innerText = course.venue;
+                            cell.querySelector(".course-teacher").innerText = course.teacher;
+                            cell.classList.add("used");
+                            cell.style.backgroundColor = "rgba(255, 182, 193, 0.5)";
+                            
+                            nextCell.style.display = "none";
+                            nextCell.classList.add("used");
+                            
+                            // Update assignments
+                            const currentLabSessions = labSessionsAssigned.get(course.subject) + 1;
+                            labSessionsAssigned.set(course.subject, currentLabSessions);
+                            courseSlotsAssigned.set(course.subject, currentLabSessions);
+                            
+                            // Add to generated timetable
+                            generatedTimetable[slot] = {
+                                subject: course.subject,
+                                teacher: course.teacher,
+                                venue: course.venue,
+                                type: 'lab'
+                            };
+                            
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Handle theory lectures
+    inputData.courses.forEach(course => {
+        if (course.lectureType === "theory") {
+            let lecturesNeeded = course.lectures;
+            courseSlotsAssigned.set(course.subject, 0);
+            
+            // Build a list of all possible slots for theory
+            let theorySlots = [];
+            timePeriods.forEach(period => {
+                period.slots.forEach(slot => {
+                    if (!checkConflicts(slot, course.subject, course.teacher, course.venue)) {
+                    theorySlots.push(slot);
+                    }
+                });
+            });
+            
+            // Filter for priority 1: only use morning slots
+            if (course.priority === 1) {
+                theorySlots = theorySlots.filter(slot => morningSlots.includes(slot));
+            }
+            
+            shuffleArray(theorySlots);
+            
+            for (let slot of theorySlots) {
+                if (lecturesNeeded === 0) break;
+                
+                const cells = document.getElementsByClassName(`slot-${slot}`);
+                for (let cell of cells) {
+                    if (cell.style.display === "none") continue;
+                    if (cell.querySelector(".course-name").innerText === "") {
+                        // Fill the slot visually
+                        cell.querySelector(".course-name").innerText = course.subject;
+                        cell.querySelector(".course-venue").innerText = course.venue;
+                        cell.querySelector(".course-teacher").innerText = course.teacher;
+                        cell.classList.add("used");
+                        cell.style.backgroundColor = "rgba(173, 216, 230, 0.5)";
+                        
+                        // Mark slot as used
+                        usedSlots.set(slot, { course: course.subject, teacher: course.teacher, venue: course.venue, type: 'theory' });
+                        
+                        // Update assignments
+                        courseSlotsAssigned.set(course.subject, courseSlotsAssigned.get(course.subject) + 1);
+                        lecturesNeeded--;
+                        
+                        // Add to generated timetable
+                        generatedTimetable[slot] = {
+                            subject: course.subject,
+                            teacher: course.teacher,
+                            venue: course.venue,
+                            type: 'theory'
+                        };
+                        
+                        break;
+                    }
+                }
+            }
+        }
+    });
+
+    // Save the generated timetable
+    localStorage.setItem(`timetable_${inputData.batch}`, JSON.stringify(generatedTimetable));
+
+    // Add batch to saved batches if not already present
+    const savedBatches = JSON.parse(localStorage.getItem('timetableBatches') || '[]');
+    if (!savedBatches.includes(inputData.batch)) {
+        savedBatches.push(inputData.batch);
+        localStorage.setItem('timetableBatches', JSON.stringify(savedBatches));
+    }
+
+    // Update class selector
+    const selector = document.getElementById('classSelector');
+    if (!selector.querySelector(`option[value="${inputData.batch}"]`)) {
+        const option = document.createElement('option');
+        option.value = inputData.batch;
+        option.textContent = inputData.batch;
+        selector.appendChild(option);
+    }
+    selector.value = inputData.batch;
+
+    // Verify slot assignments
+    let warningMessages = [];
+    inputData.courses.forEach(course => {
+        const slotsAssigned = courseSlotsAssigned.get(course.subject) || 0;
+        if (slotsAssigned !== course.lectures) {
+            let reason = "";
+            if (course.lectureType === "lab") {
+                reason = "Could not find enough consecutive slots for lab sessions";
+            } else if (course.priority === 1) {
+                reason = "Could not find enough morning slots";
+            } else {
+                reason = "Not enough available slots due to conflicts";
+            }
+            warningMessages.push(`${course.subject}: ${slotsAssigned}/${course.lectures} slots assigned - ${reason}`);
+        }
+    });
+
+    if (warningMessages.length > 0) {
+        const message = "Some courses could not be assigned all their required slots:\n\n" +
+            warningMessages.join("\n") + "\n\n" +
+            "Possible solutions:\n" +
+            "1. Click 'Auto Generate' again to try a different arrangement\n" +
+            "2. Adjust the timetable manually\n" +
+            "3. Consider reducing the number of lectures or changing time slots";
+        alert(message);
+    }
+
+    // Clear the input data after generation
+    localStorage.removeItem("autoInputData");
+}
+
+// Helper function to get the next slot
+function getNextSlot(slot) {
+    const row = document.querySelector(`.slot-${slot}`).parentElement;
+    const nextRow = row.nextElementSibling;
+    if (nextRow && !nextRow.classList.contains("break-row")) {
+        const cellIndex = Array.from(row.cells).indexOf(document.querySelector(`.slot-${slot}`));
+        const nextCell = nextRow.cells[cellIndex];
+        return nextCell.querySelector('.slot-name')?.innerText;
+    }
+    return null;
+}
+</script>
+
+<script>
+// Function to handle class selection
+function handleClassSelection(className) {
+    // Enable/disable delete button
+    const deleteBtn = document.getElementById('deleteClassBtn');
+    deleteBtn.disabled = !className;
+    
+    // Switch to selected class
+    switchClass(className);
+}
+
+// Function to delete the selected class
+function deleteSelectedClass() {
+    const currentClass = document.getElementById('classSelector').value;
+    if (!currentClass) {
+        alert('Please select a class to delete');
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to delete the class "${currentClass}"? This will remove all timetable data for this class.`)) {
+        return;
+    }
+
+    // Remove from localStorage
+    localStorage.removeItem(`timetable_${currentClass}`);
+    
+    // Remove from saved batches
+    const savedBatches = JSON.parse(localStorage.getItem('timetableBatches') || '[]');
+    const updatedBatches = savedBatches.filter(batch => batch !== currentClass);
+    localStorage.setItem('timetableBatches', JSON.stringify(updatedBatches));
+
+    // Remove from selector
+    const selector = document.getElementById('classSelector');
+    const option = selector.querySelector(`option[value="${currentClass}"]`);
+    if (option) {
+        option.remove();
+    }
+    selector.value = '';
+
+    // Clear the timetable display
+    const allCells = document.querySelectorAll(".maintbl td");
+    allCells.forEach(cell => {
+        cell.querySelector(".course-name").innerText = "";
+        cell.querySelector(".course-venue").innerText = "";
+        cell.querySelector(".course-teacher").innerText = "";
+        cell.classList.remove("used");
+        cell.style.backgroundColor = "white";
+        cell.style.display = "";
+        cell.style.height = "";
+        cell.rowSpan = "1";
+    });
+
+    // Disable delete button
+    document.getElementById('deleteClassBtn').disabled = true;
+
+    // Show success message
+    alert(`Class "${currentClass}" has been successfully deleted.`);
+}
+
+// Initialize class selector on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved batches from localStorage
+    const savedBatches = JSON.parse(localStorage.getItem('timetableBatches') || '[]');
+    const selector = document.getElementById('classSelector');
+    
+    // Clear existing options except the default one
+    while (selector.options.length > 1) {
+        selector.remove(1);
+    }
+    
+    // Add saved batches to selector
+    savedBatches.forEach(batch => {
+        const option = document.createElement('option');
+        option.value = batch;
+        option.textContent = batch;
+        selector.appendChild(option);
+    });
+
+    // If there's input data, auto-generate timetable
+    const inputData = JSON.parse(localStorage.getItem("autoInputData"));
+    if (inputData) {
+        // Set the selector to the current batch
+        selector.value = inputData.batch;
+        // Generate the timetable
+        autoGenerateTimetable();
+        // Clear the input data after generation
+        localStorage.removeItem("autoInputData");
+    }
+
+    // Add change event listener to enable/disable delete button
+    selector.addEventListener('change', function() {
+        const deleteBtn = document.getElementById('deleteClassBtn');
+        deleteBtn.disabled = !this.value;
+    });
+});
+
+// Update the auto generate button to handle class selection
+document.querySelector('button[onclick="autoGenerateTimetable()"]').onclick = function() {
+    const currentClass = document.getElementById('classSelector').value;
+    if (!currentClass) {
+        alert('Please select a class first');
+        return;
+    }
+    autoGenerateTimetable();
+};
+
+// Function to switch between classes
+function switchClass(className) {
+    if (!className) return;
+    
+    // Clear current timetable
+    const allCells = document.querySelectorAll(".maintbl td");
+    allCells.forEach(cell => {
+        cell.querySelector(".course-name").innerText = "";
+        cell.querySelector(".course-venue").innerText = "";
+        cell.querySelector(".course-teacher").innerText = "";
+        cell.classList.remove("used");
+        cell.style.backgroundColor = "white";
+        cell.style.display = "";
+        cell.style.height = "";
+        cell.rowSpan = "1";
+    });
+
+    // Load class timetable from localStorage
+    const savedTimetable = JSON.parse(localStorage.getItem(`timetable_${className}`) || '{}');
+    
+    // Apply saved timetable
+    Object.entries(savedTimetable).forEach(([slotId, data]) => {
+        const cell = document.querySelector(`.slot-${slotId}`);
+        if (cell) {
+            cell.querySelector(".course-name").innerText = data.subject;
+            cell.querySelector(".course-venue").innerText = data.venue;
+            cell.querySelector(".course-teacher").innerText = data.teacher;
+            cell.classList.add("used");
+            cell.style.backgroundColor = data.type === 'lab' ? "rgba(255, 182, 193, 0.5)" : "rgba(173, 216, 230, 0.5)";
+            
+            if (data.type === 'lab') {
+                cell.rowSpan = "2";
+                cell.style.height = "100px";
+                const nextCell = cell.parentElement.nextElementSibling?.cells[Array.from(cell.parentElement.cells).indexOf(cell)];
+                if (nextCell) {
+                    nextCell.style.display = "none";
+                }
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>
